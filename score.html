@@ -1,0 +1,187 @@
+<script language="javascript" />
+	var game_time;
+	
+	function initialize()
+	{
+		var no;
+		for(var i=0;i<=9;i++)
+		{
+			no = i + 1;
+			document.getElementById('b'+no).disabled = true;
+			document.getElementById('b'+no).opacity = 0.2;
+		}
+	}
+	
+	function score(id)
+	{
+		var current_score;
+		current_score = parseInt(document.getElementById('s'+id).innerHTML);
+		if (current_score <= 2)
+		{
+			current_score = current_score + 1;
+		}
+		else if (current_score == 3)
+		{
+			current_score = current_score + 2;
+		}
+		else
+		{
+			current_score = 1;
+		}
+		document.getElementById('s'+id).innerHTML = current_score;
+		updateScore();
+	}
+	
+	function updateScore()
+	{
+		var no, red_total, white_total;
+		red_total = 0;
+		white_total = 0;
+		
+		for(var i=0;i<=9;i++)
+		{		
+			no = i+1;			
+			if( (no%2) != 0 )
+			{
+				red_total = red_total + parseInt(document.getElementById('s'+no).innerHTML);				
+			}
+			else
+			{
+				white_total = white_total + parseInt(document.getElementById('s'+no).innerHTML);				
+			}
+		}
+		document.getElementById('red_total').innerHTML = red_total;
+		document.getElementById('white_total').innerHTML = white_total;		
+	}
+	
+	function start()
+	{
+		document.getElementById('btnStart').value = 'Restart';
+		document.getElementById('btnStart').onclick = new Function('var yn=confirm("Are you sure restart the timer and score?"); if(yn) {document.location.reload(true);}');
+		var no;
+		for(var i=0;i<=9;i++)
+		{
+			no = i + 1;
+			document.getElementById('b'+no).disabled = false;
+			document.getElementById('b'+no).opacity = 0;
+		}
+		
+		game_time = (parseInt(document.getElementById("game_time_min").value) * 60) + parseInt(document.getElementById("game_time_sec").value);
+		
+		m = Math.floor(game_time/60);
+		s = game_time%60;
+		document.getElementById('timer').style.fontSize = '2.5em';
+		document.getElementById('timer').innerHTML=("0" + m).slice(-2) + ":" + ("0" + s).slice(-2);
+		setInterval(function(){timer()},1000);
+	}
+	
+	function timer()
+	{
+		var m,s;
+		game_time--;
+		if (game_time>0) 
+		{
+			m = Math.floor(game_time/60);
+			s = game_time%60;
+		}
+		else
+		{
+			m = Math.floor(Math.abs(game_time)/60);
+			s = (Math.abs(game_time))%60;
+		}
+		
+		if (game_time==0)
+		{
+			document.getElementById('timer').style.color = 'red';
+		}
+		
+		document.getElementById("timer").innerHTML=("0" + m).slice(-2) + ":" + ("0" + s).slice(-2);
+	}
+	
+</script>
+
+<html>
+	<head>
+		<title>Gateball Time & Score Tracker</title>
+		<style type="text/css">
+			body {width:100%;margin:0px;font-family:Arial}
+			table#main {width:100%;cell-padding:1px;border:solid 2px;border-collapse:collapse}
+			td {width:15%;padding:1px 1px 1px 1px;border:solid 2px}
+			tr {padding:1px 11px 11px 11px;border:solid 2px}
+			input#btnStart {width:50px;height:50px;padding:30px 30px 30px 30px}
+			input.red_team_ball {background-color:red;color:white;width:100%;font-size:x-large;padding:20px 20px 20px 20px}
+			input.white_team_ball {background-color:grey;color:black;width:100%;font-size:x-large;padding:20px 20px 20px 20px}
+			div.red_team_score {text-align:center;font-size:2.5em;padding:0px 0px 0px 0px}
+			div.white_team_score {background-color:white;color:black;text-align:center;font-size:2.5em;padding:0px 0px 0px 0px}
+			div#red_total {text-align:center;font-size:3em}
+			div#white_total {text-align:center;font-size:3em}
+			input#game_time_min, input#game_time_sec {width:40;height:45px;font-size:x-large}
+			
+		</style>
+	</head>
+	
+	<body onload="initialize()">
+		
+		<table id='main'>
+			
+			<tr>
+				<td colspan=4><div align="center" id='title'>Gateball Time & Score Tracker</div></div></td>
+			</tr>
+			<tr>
+				<td colspan=4 height=50px>
+					<div align="center" id='timer'>Game time
+						<input type="text" id="game_time_min" value="30" />
+						:<input type="text" id="game_time_sec" value="00" />
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=4 height="50px">
+					<div align=center>
+						<input type="button" id="btnStart" value="Start" onclick="start()" />
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td width="40%"><input class="red_team_ball" type="button" id="b1" value="1" onclick="score(1)"></td>
+				<td width="10%"><div class="red_team_score" id='s1'>0</div></td>
+				<td width="40%"><input class="white_team_ball" type="button" id="b2" value="2" onclick="score(2)"></td>
+				<td width="10%"><div class="white_team_score" id='s2'>0</div></td>
+			</tr>
+			
+			<tr>				
+				<td><input class="red_team_ball" type="button" id="b3" value="3" onclick="score(3)"></td>
+				<td><div class="red_team_score" id='s3'>0</div></td>
+				<td><input class="white_team_ball" type="button" id="b4" value="4" onclick="score(4)"></td>
+				<td><div class="white_team_score" id='s4'>0</div></td>
+			</tr>
+			
+			<tr>
+				<td><input class="red_team_ball" type="button" id="b5" value="5" onclick="score(5)"></td>
+				<td><div class="red_team_score" id='s5'>0</div></td>
+				<td><input class="white_team_ball" type="button" id="b6" value="6" onclick="score(6)"></td>
+				<td><div class="white_team_score" id='s6'>0</div></td>
+			</tr>
+			
+			<tr>
+				<td><input class="red_team_ball" type="button" id="b7" value="7" onclick="score(7)"></td>
+				<td><div class="red_team_score" id='s7'>0</div></td>
+				<td><input class="white_team_ball" type="button" id="b8" value="8" onclick="score(8)"></td>
+				<td><div class="white_team_score" id='s8'>0</div></td>
+			</tr>
+			
+			<tr>
+				<td><input class="red_team_ball" type="button" id="b9" value="9" onclick="score(9)"></td>
+				<td><div class="red_team_score" id='s9'>0</div></td>
+				<td><input class="white_team_ball" type="button" id="b10" value="10" onclick="score(10)"></td>
+				<td><div class="white_team_score" id='s10'>0</div></td>
+			</tr>
+			
+			<tr>
+				<td colspan=2 width="50%"><div id='red_total'>0</div></td>
+				<td colspan=2 width="50%"><div id='white_total'>0</div></td>	
+			</tr>
+		</table>
+	</body>
+</html>
